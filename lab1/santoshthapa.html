@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github Search User Using Github API</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="box">
+
+        <div class="container">
+            <br><br>
+            <div class="semi-box">
+                <img src="/lab1/images/logo.svg" height="100px" color="black">
+            </div>
+            <h1 class="search"> Github Search User App</h1>
+            <br>
+            <div class="input-section">
+                <!-- data revealing -->
+                <h3 class="users-dropdown">
+                    Users Dropdown
+                </h3>
+                <!-- user drop down -->
+                <select id="users_list">
+                    <option value="" selected disabled>Select a user</option>
+                </select>
+            </div>
+            <br>
+            <form action="" autocomplete="off" onsubmit="searchUser(); return false">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="search_bar" placeholder="Search Username">
+                    <br>
+                    <button class="icon" type="submiit">Search User</button>
+                </div>
+            </form>
+            <br>
+            <h2 id="result">
+                <div class="display-card " id="user_detail">
+                    <h2 class="user">User Details</h2>
+                    <div>
+                        User ID:
+                        <span id="user_login"></span>
+                    </div>
+                    <div>
+                        User Name:
+                        <span id="user_name"></span>
+                    </div>
+                    <div>
+                        User URL:
+                        <a id="user_github_html_url"></a>
+                    </div>
+                    <div>
+                        User Avatar:
+                        <img id="user_avatar_url"></img>
+                    </div>
+                </div>
+            </h2>
+        </div>
+    </div>
+    <div>
+        <div id="error_message"></div>
+    </div>
+
+    <!-- js link -->
+
+    <script>
+        const users_list = document.getElementById('users_list'); // linking user_list from the html file to js file 
+        const user_detail = document.getElementById('user_detail'); // linking user_detail from the html file to js file
+        const user_login = document.getElementById('user_login');
+        const user_name = document.getElementById('user_name');
+        const user_avatar = document.getElementById('user_avatar_url');
+        const user_github = document.getElementById('user_github_html_url');
+        const search_bar = document.getElementById('search_bar');
+        const search_button = document.getElementById('search_button');
+        const error_message = document.getElementById('error_message');
+
+
+        // base url for github api
+        const base_url = 'https://api.github.com/users';
+
+        // fetch the list of users from github api
+        // axios.get(base_url)
+        //     .then(response => {
+        //         const users = response.data;
+        //         users.map(user => {
+        //             const option = document.createElement('option');
+        //             option.value = user.id;
+        //             option.textContent = user.name ? user.name : user.login;
+        //             option.className = 'user-list-item';
+        //             users_list.appendChild(option);
+        //         });
+        //     })
+        //     .catch(function (error) {
+        //         console.log("Error while fetching.\n", error);
+        //     })
+
+        // using fetch
+        fetch(base_url)
+            .then(response => response.json())
+            .then(users => {
+                users.map(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = user.name ? user.name : user.login;
+                    option.className = 'user-list-item';
+                    users_list.appendChild(option);
+                });
+            })
+            .catch(function (error) {
+                console.log("Error while fetching.\n", error);
+            })
+
+        // fetch the user details based on the selected user from the list
+        users_list.addEventListener('change', () => {
+            const user_name = users_list.value
+            if (user_name) {
+                // axios.get(`${base_url}/${user_name}`)
+                //     .then(response => {
+                //         const user = response.data;
+                //         user_detail.style.display = 'block';
+                //         user_login.textContent = user.login;
+                //         user_name.textContent = user.name;
+                //         user_avatar.src = user.avatar_url;
+                //         user_avatar.alt = user.name;
+                //         user_github.href = user.html_url;
+                //         user_github.textContent = user.html_url;
+                //     })
+                //     .catch(function (error) {
+                //         console.log("Error while fetching.\n", error);
+                //         error_message.innerHTML = "Error While Fetching";
+                //     })
+                // with fetch
+                fetch(`${base_url}/${user_name}`)
+                    .then(response => response.json())
+                    .then(user => {
+                        user_detail.style.display = 'block';
+                        user_login.textContent = user.login;
+                        user_name.textContent = user.name;
+                        user_avatar.src = user.avatar_url;
+                        user_avatar.alt = user.name;
+                        user_github.href = user.html_url;
+                        user_github.textContent = user.html_url;
+                        error_message.style.display = 'none';
+                    })
+                    .catch(function (error) {
+                        console.log("Error while fetching.\n", error);
+                        error_message.innerHTML = "Error While Fetching";
+                    })
+            }
+            else {
+                user_detail.style.display = 'none';
+            }
+        })
+
+        // search the user based in the input in search bar
+        function searchUser() {
+            const userName = search_bar.value;
+            if (userName.trim() !== '') {
+                axios.get(`${base_url}/${userName}`)
+                    .then(response => {
+                        const user = response.data;
+                        user_detail.style.display = 'block';
+                        user_login.textContent = user.login;
+                        user_name.textContent = user.name;
+                        user_avatar.src = user.avatar_url;
+                        user_avatar.alt = user.name;
+                        user_github.href = user.html_url;
+                        user_github.textContent = user.html_url;
+                        error_message.style.display = 'none';
+                    })
+                    .catch(function (error) {
+                        console.log("Error while fetching.\n", error);
+                        error_message.innerHTML = "Error While Fetching";
+                    })
+            }
+            else {
+                user_detail.style.display = 'none';
+                error_message.innerHTML = "Please enter a valid username";
+            }
+        }
+
+        search_button.addEventListener('click', search)
+
+        search_bar.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault()
+                search()
+            }
+        })
+    </script>
+</body>
+
+</html>
