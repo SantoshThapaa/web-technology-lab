@@ -1,0 +1,32 @@
+.container-fluid{
+    background-image: url(/lab1/images/github.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 900px;
+    overflow: hidden;
+    padding: 30px;
+    margin-bottom: 10px;
+}
+.container{
+    text-align: center;
+    border: unset solid;
+    width: 600px; 
+    margin: 40px 400px;
+    padding: 10px;
+    height: 400px;
+    background-color: rgb(253, 247, 247);
+    box-shadow: -10px -10px 15px rgba(253, 249, 249, 0.5), 10px 10px 15px rgba(219, 18, 18, 0.5); 
+    
+}
+.search{
+    text-shadow: -3px -4px 9px rgb(27, 23, 23);
+}
+.user{
+    text-shadow: -3px -4px 9px rgb(240, 12, 12);
+    color: white;
+}
+.display-card{
+    color: black;
+    text-shadow: -3px -4px 9px rgb(240, 12, 12);
+}
